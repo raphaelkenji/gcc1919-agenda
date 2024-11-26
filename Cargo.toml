@@ -1,0 +1,13 @@
+[package]
+name = "gcc1919-agenda"
+version = "0.1.0"
+edition = "2021"
+authors = ["Raphael Kenji da Rosa <raphael.kenji@aluno.cefet-rj.br>", "Jose Antonio de Souza Ferreira <jose.ferreira@aluno.cefet-rj.br>"]
+
+[dependencies]
+chrono = {version = "0.4.38", features = ["serde"]}
+mongodb = "3.1.0"
+serde = "1.0.214"
+serde_json = "1.0.132"
+tokio = "1.41.0"
+futures = "0.3"
