@@ -1,15 +1,13 @@
 mod utils;
 mod services;
-mod database;
+mod models;
+mod dao;
 
 use utils::input;
 use services::{appointments, contacts};
 
 #[tokio::main]
 async fn main() {
-
-    // Conecta com o banco de dados
-    let _db = database::connect().await.unwrap();
     loop {
         println!("Selecione uma opção:");
         println!("1. Gerenciar compromissos");

@@ -1,3 +1,6 @@
+use crate::models::appointments::Appointments;
+use crate::models::appointments::Prioridade;
+use crate::dao::appointments_dao::AppointmentsDAO;
 
 pub async fn menu() {
 
@@ -21,7 +24,18 @@ pub async fn menu() {
 }
 
 async fn add() {
+    let mock_appointment = Appointments {
+        titulo: String::from("Reunião de Projeto"),
+        descricao: String::from("Discussão sobre o andamento do projeto"),
+        data: String::from("2023-10-10"),
+        hora: String::from("10:00"),
+        prioridade: Prioridade::Alta,
+    };
+    
     println!("Adicionando compromisso...");
+    let dao = AppointmentsDAO::new().await.expect("Failed to create AppointmentsDAO");
+    dao.create(mock_appointment).await.unwrap();
+    
 }
 
 async fn list() {
