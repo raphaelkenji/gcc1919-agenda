@@ -21,36 +21,24 @@ impl AppointmentsDAO {
     pub async fn read_all(&self) -> Result<Vec<Appointments>, Box<dyn std::error::Error>> {
         let filter = bson::doc! {};
         let mut cursor = self.collection.find(filter).await?;
-        while let Some(doc) = cursor.try_next().await? {
-            println!("{:#?}", doc);
-        };
-
-
-        let mut result = Vec::new();
+        let mut result = Vec::<Appointments>::new();
         while let Some(doc) = cursor.try_next().await? {
             result.push(doc);
         }
         Ok(result)
     }
+    
+    pub async fn update(&self, appointment: Appointments) -> Result<(), Box<dyn std::error::Error>> {
+        let filter = bson::doc! { "_id": appointment.id };
+        let update = bson::to_document(&appointment)?;
+        self.collection.update_one(filter, bson::doc! { "$set": update }).await?;
 
-    // pub async fn retitle(&self, titulo: &str) -> Result<Option<Appointments>, Box<dyn std::error::Error>> {
-    //     let filter = doc! { "titulo": titulo };
-    //     let Aments = self.collection.find_one(filter, None).await?;
-    //     Ok(Appointments)
-    // }
+        Ok(())
+    }
 
-    // pub async fn update(&self, titulo: &str, updated: Appointments) -> Result<(), Box<dyn std::error::Error>> {
-    //     let filter = doc! { "titulo": titulo };
-    //     let update_doc = doc! {
-    //         "$set": bson::to_document(&updated)?
-    //     };
-    //     self.collection.update_one(filter, update_doc, None).await?;
-    //     Ok(())
-    // }
-
-    // pub async fn delete(&self, titulo: &str) -> Result<(), Box<dyn std::error::Error>> {
-    //     let filter = doc! { "titulo": titulo };
-    //     self.collection.delete_one(filter, None).await?;
-    //     Ok(())
-    // }
+    pub async fn delete(&self, appointment: &Appointments) -> Result<(), Box<dyn std::error::Error>> {
+        let filter = bson::doc! { "_id": appointment.id };
+        self.collection.delete_one(filter).await?;
+        Ok(())
+    }
 }

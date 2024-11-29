@@ -9,8 +9,10 @@ use crate::services::database::connect;
 
 #[tokio::main]
 async fn main() {
+    println!("Conectando ao MongoDB");
     let _db = connect().await.unwrap();
-    
+    println!("Conectado ao MongoDB");
+
     loop {
         println!("Selecione uma opção:");
         println!("1. Gerenciar compromissos");
