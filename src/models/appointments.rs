@@ -11,7 +11,7 @@ pub struct Appointments {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub enum Prioridade {
-    Alta,
-    Media,
-    Baixa,
+    Alta = 3,
+    Media = 2,
+    Baixa = 1,
 }

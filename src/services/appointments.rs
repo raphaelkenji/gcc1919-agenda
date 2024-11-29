@@ -2,7 +2,7 @@ use crate::models::appointments::Appointments;
 use crate::models::appointments::Prioridade;
 use crate::dao::appointments_dao::AppointmentsDAO;
 
-pub async fn menu() {
+pub async fn menu(_db : &mongodb::Database) {
 
     loop {
         println!("Selecione uma opção:");
@@ -13,8 +13,8 @@ pub async fn menu() {
         println!("5. Sair");
         
         match crate::utils::input::number::<u8>("Opção: ") {
-            1 => add().await,
-            2 => list().await,
+            1 => add(&_db).await,
+            2 => list(&_db).await,
             3 => update().await,
             4 => delete().await,
             5 => break,
@@ -23,7 +23,7 @@ pub async fn menu() {
     }
 }
 
-async fn add() {
+async fn add(_db: &mongodb::Database) {
     let mock_appointment = Appointments {
         titulo: String::from("Reunião de Projeto"),
         descricao: String::from("Discussão sobre o andamento do projeto"),
@@ -33,13 +33,14 @@ async fn add() {
     };
     
     println!("Adicionando compromisso...");
-    let dao = AppointmentsDAO::new().await.expect("Failed to create AppointmentsDAO");
+    let dao = AppointmentsDAO::new(_db).unwrap();
     dao.create(mock_appointment).await.unwrap();
     
 }
 
-async fn list() {
-    println!("Listando compromissos...");
+async fn list(_db: &mongodb::Database) {
+    let dao = AppointmentsDAO::new(_db).unwrap();
+    dao.read_all().await.unwrap();
 }
 
 async fn update() {
