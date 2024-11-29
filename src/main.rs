@@ -6,9 +6,11 @@ mod dao;
 use utils::input;
 use services::{appointments, contacts};
 use crate::services::database::connect;
+use dotenvy::dotenv;
 
 #[tokio::main]
 async fn main() {
+    dotenv().ok();
     println!("Conectando ao MongoDB");
     let _db = connect().await.unwrap();
     println!("Conectado ao MongoDB");
