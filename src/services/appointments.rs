@@ -1,9 +1,6 @@
 use crate::dao::appointments_dao::AppointmentsDAO;
 use crate::models::appointments::Appointments;
-use crate::utils::input::get_optional_input;
-use crate::utils::input::get_priority_input;
-use crate::utils::input::string;
-use crate::utils::input::number;
+use crate::utils::input::{get_optional_input, get_priority_input, string, number};
 use crate::utils::pprint::{chose_appointments_from_table, print_appointments_table};
 
 pub async fn menu(_db: &mongodb::Database) {
