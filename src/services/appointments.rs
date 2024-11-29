@@ -1,6 +1,9 @@
 use crate::dao::appointments_dao::AppointmentsDAO;
-use crate::models::appointments::Appointments;
-use crate::utils::input::{get_optional_input, get_priority_input, string, number};
+use crate::models::appointments::{AppointmentBuilder, Appointments};
+use crate::utils::input::{
+    date, get_optional_date, get_optional_input, get_optional_number, get_priority_input, number,
+    string,
+};
 use crate::utils::pprint::{chose_appointments_from_table, print_appointments_table};
 
 pub async fn menu(_db: &mongodb::Database) {
@@ -26,10 +29,19 @@ pub async fn menu(_db: &mongodb::Database) {
 async fn add(_db: &mongodb::Database) {
     let titulo = string("Título: ");
     let descricao = string("Descrição: ");
-    let data = string("Data (YYYY-MM-DD): ");
+    let data = date("Data (DD-MM-AAAA): ");
     let hora = string("Hora (HH:MM): ");
     let prioridade = get_priority_input();
-    let mock_appointment = Appointments::new(titulo, data, hora, descricao, prioridade);
+    let duracao = number("Duração (minutos): ");
+
+    let mock_appointment = Appointments::new(
+        titulo,
+        bson::DateTime::from_chrono(data.and_utc()),
+        hora,
+        descricao,
+        prioridade,
+        duracao,
+    );
 
     println!("Adicionando compromisso...");
     let dao = AppointmentsDAO::new(_db).unwrap();
@@ -59,25 +71,31 @@ async fn update(_db: &mongodb::Database) {
     println!("\nCompromisso selecionado:");
     print_appointments_table(vec![selected_appointment]);
 
-    println!("Digite um novo valor ou deixe em branco para manter o atual (exceto para prioridade):");
+    println!(
+        "Digite um novo valor ou deixe em branco para manter o atual (exceto para prioridade):"
+    );
+    let appointment_builder = AppointmentBuilder::new((*selected_appointment).clone());
+
     let titulo = get_optional_input("Novo título: ");
     let descricao = get_optional_input("Nova descrição: ");
-    let data = get_optional_input("Nova data (YYYY-MM-DD): ");
+    let data = get_optional_date("Nova data (DD-MM-AAAA): ")
+        .map(|d| bson::DateTime::from_chrono(d.and_utc()));
     let hora = get_optional_input("Nova hora (HH:MM): ");
-    let prioridade = get_priority_input();
+    let prioridade = Some(get_priority_input());
+    let duracao = get_optional_number::<i32>("Nova Duração (segundos): ");
 
-    let updated_appointment = Appointments::update_appointment(
-        selected_appointment,
-        titulo,
-        data,
-        hora,
-        descricao,
-        prioridade,
-    );
+    let new_appointment = appointment_builder
+        .titulo(titulo)
+        .descricao(descricao)
+        .data(data)
+        .hora(hora)
+        .prioridade(prioridade)
+        .duracao(duracao)
+        .build();
 
-    print_appointments_table(vec![&updated_appointment]);
+    print_appointments_table(vec![&new_appointment]);
 
-    dao.update(updated_appointment).await.unwrap();
+    dao.update(new_appointment).await.unwrap();
     println!("Compromisso atualizado com sucesso.");
 }
 

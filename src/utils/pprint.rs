@@ -7,24 +7,25 @@ where
     T::Item: std::borrow::Borrow<Appointments>,
 {
     println!(
-        "{:<5} {:<20} {:<12} {:<8} {:<30} {:<10}",
-        "Nº", "Título", "Data", "Hora", "Descrição", "Prioridade"
+        "{:<5} {:<20} {:<12} {:<8} {:<30} {:<10} {:<12}",
+        "Nº", "Título", "Data", "Hora", "Descrição", "Duração", "Prioridade"
     );
-    println!("{:-<90}", "");
+    println!("{:-<100}", "");
     for (index, appointment) in appointments.into_iter().enumerate() {
-        let appointment = appointment.borrow();
+        let appointment: &Appointments = appointment.borrow();
         println!(
-            "{:<5} {:<20} {:<12} {:<8} {:<30} {:<10}",
+            "{:<5} {:<20} {:<12} {:<8} {:<30} {:<10} {:<12}",
             index + 1,
             appointment.titulo,
-            appointment.data,
+            appointment.data.to_chrono().format("%d-%m-%Y"),
             appointment.hora,
             if appointment.descricao.len() > 27 {
-                appointment.descricao.chars().take(27).collect::<String>() + "..."
+                format!("{}...", &appointment.descricao[0..27])
             } else {
                 appointment.descricao.clone()
             },
-            appointment.prioridade
+            appointment.duracao,
+            appointment.prioridade,
         );
     }
 }
