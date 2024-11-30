@@ -33,7 +33,7 @@ where
 pub fn chose_appointments_from_table(appointments: &Vec<Appointments>) -> usize {
     print_appointments_table(appointments);
     let mut index =
-        crate::utils::input::number::<usize>("Escolha o número do compormisso para atualizar:");
+        crate::utils::input::number::<usize>("Escolha o número do compormisso:");
     while index == 0 || index > appointments.len() {
         println!(
             "Número Inválido. Escolha um numero entre 1 and {}.",
