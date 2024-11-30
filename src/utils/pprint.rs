@@ -16,7 +16,11 @@ where
         println!(
             "{:<5} {:<20} {:<12} {:<8} {:<30} {:<10} {:<12}",
             index + 1,
-            appointment.titulo,
+            if appointment.titulo.len() > 17 {
+                format!("{}...", &appointment.titulo[0..17])
+            } else {
+                appointment.titulo.clone()
+            },
             appointment.data.to_chrono().format("%d-%m-%Y"),
             appointment.hora,
             if appointment.descricao.len() > 27 {
