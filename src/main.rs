@@ -23,7 +23,7 @@ async fn main() {
 
         match input::number::<u8>("Opção: ") {
             1 => appointments::menu(&_db).await,
-            2 => contacts::menu().await,
+            2 => contacts::menu(&_db).await,
             3 => break,
             _ => println!("Opção inválida."),
         }

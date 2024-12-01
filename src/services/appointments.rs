@@ -51,7 +51,7 @@ async fn update(_db: &mongodb::Database) {
 
     let index = chose_appointments_from_table(&appointments);
     let selected_appointment = &appointments[index - 1];
-    println!("\nCompromisso selecionado:");
+    println!("\nCompromisso selecionado: ");
     print_appointments_table(vec![selected_appointment]);
 
     let appointment = get_appointment_details(Some(selected_appointment)).await;

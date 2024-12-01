@@ -13,3 +13,4 @@ tokio = "1.41.0"
 futures = "0.3"
 dotenvy = "0.15"
 bson = {version = "2.13.0", features = ["chrono-0_4"]}
+regex = "1.11.1"
