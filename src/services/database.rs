@@ -1,4 +1,5 @@
 use mongodb::{error::Result, Client, Database};
+
 pub async fn connect() -> Result<Database> {
     let mongo_uri = std::env::var("MONGO_URI").expect("MONGO_URI não foi definida");
     match Client::with_uri_str(&mongo_uri).await {

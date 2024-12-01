@@ -42,6 +42,7 @@ impl AppointmentsDAO {
         Ok(())
     }
 
+    #[allow(dead_code)]
     pub async fn read_by_id(&self, appointment: &Appointments) -> Result<Option<Appointments>, Box<dyn std::error::Error>> {
         let filter = bson::doc! { "_id": appointment.id };
         let result = self.collection.find_one(filter).await?;

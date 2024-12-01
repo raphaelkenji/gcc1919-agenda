@@ -42,6 +42,7 @@ impl ContactsDAO {
         Ok(())
     }
 
+    #[allow(dead_code)]
     pub async fn read_by_id(&self, contact: &Contacts) -> Result<Option<Contacts>, Box<dyn std::error::Error>> {
         let filter = bson::doc! { "_id": contact.id };
         let result = self.collection.find_one(filter).await?;
